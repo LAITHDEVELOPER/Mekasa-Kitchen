@@ -6,338 +6,206 @@
     <title>Mekasa | Kitchen Display</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #fefaf5; color: #2e241d; overflow-x: hidden; position: relative; }
-        .gold-particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
-        .gold-particle { position: absolute; top: -10px; width: 3px; height: 3px; background: radial-gradient(circle, rgba(212,175,55,0.8), rgba(212,175,55,0.2)); border-radius: 50%; box-shadow: 0 0 4px rgba(212,175,55,0.6); animation: fall linear infinite; opacity: 0.5; }
-        @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 0.6; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-        .app-container { max-width: 1400px; margin: 20px auto; padding: 0 20px; position: relative; z-index: 2; }
-        .header { background: rgba(255,255,248,0.96); backdrop-filter: blur(14px); border-radius: 32px; padding: 16px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        body { font-family: 'Inter', sans-serif; background: #fefaf5; color: #2e241d; }
+        .app-container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+        .header { background: rgba(255,255,248,0.96); border-radius: 32px; padding: 16px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(212,175,55,0.3); box-shadow: 0 8px 20px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 10px; }
         .logo-area { display: flex; align-items: center; gap: 12px; }
         .logo-circle { width: 50px; height: 50px; background: linear-gradient(135deg, #f9e7d2, #f5d5b3); border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px solid #d4af37; }
         .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-text { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #8B5A2B, #c47b2e); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .logo-text { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg, #8B5A2B, #c47b2e); background-clip: text; color: transparent; }
         .stats { display: flex; gap: 15px; }
         .stat-card { background: white; border-radius: 30px; padding: 8px 20px; text-align: center; border: 1px solid #e2cfb5; }
-        .stat-number { font-size: 1.8rem; font-weight: 800; color: #8B5A2B; line-height: 1; }
+        .stat-number { font-size: 1.8rem; font-weight: 800; color: #8B5A2B; }
         .stat-label { font-size: 0.75rem; color: #7c6b5a; }
         .controls { display: flex; gap: 12px; }
-        .control-btn { width: 42px; height: 42px; border-radius: 50%; background: white; border: 1px solid #e2cfb5; color: #8B5A2B; cursor: pointer; transition: all 0.2s; font-size: 1.1rem; }
-        .control-btn:hover { background: #8B5A2B; color: white; transform: scale(1.05); }
+        .control-btn { width: 42px; height: 42px; border-radius: 50%; background: white; border: 1px solid #e2cfb5; color: #8B5A2B; cursor: pointer; font-size: 1.1rem; }
+        .control-btn:hover { background: #8B5A2B; color: white; }
         .tabs { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 2px solid #f0e2d2; padding-bottom: 8px; }
-        .tab-btn { background: none; border: none; padding: 8px 24px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1rem; color: #7c6b5a; cursor: pointer; border-radius: 40px; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
-        .tab-btn.active { background: #8B5A2B; color: white; box-shadow: 0 4px 12px rgba(139,90,43,0.3); }
-        .tab-btn .badge { background: rgba(0,0,0,0.1); padding: 2px 8px; border-radius: 30px; font-size: 0.75rem; }
-        .tab-btn.active .badge { background: rgba(255,255,255,0.2); }
+        .tab-btn { background: none; border: none; padding: 8px 24px; font-weight: 600; font-size: 1rem; color: #7c6b5a; cursor: pointer; border-radius: 40px; }
+        .tab-btn.active { background: #8B5A2B; color: white; }
         .orders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
-        .order-card { background: white; border-radius: 28px; overflow: hidden; border: 1px solid rgba(212,175,55,0.4); transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
-        .order-card:hover { transform: translateY(-4px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15); border-color: #d4af37; }
-        .order-header { background: linear-gradient(135deg, #f9e7d2, #f5d5b3); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2cfb5; }
+        .order-card { background: white; border-radius: 28px; overflow: hidden; border: 1px solid rgba(212,175,55,0.4); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .order-header { background: linear-gradient(135deg, #f9e7d2, #f5d5b3); padding: 12px 16px; display: flex; justify-content: space-between; border-bottom: 1px solid #e2cfb5; }
         .order-id { font-weight: 800; color: #8B5A2B; font-family: 'Playfair Display', serif; }
         .order-time { font-size: 0.8rem; color: #7c6b5a; }
         .order-body { padding: 16px; }
-        .table-info { background: #fef6ef; border-radius: 20px; padding: 12px; text-align: center; margin-bottom: 16px; border: 1px solid #e7cfb5; }
-        .table-number { font-size: 1.8rem; font-weight: 800; color: #8B5A2B; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .order-items { background: #faf6f0; border-radius: 20px; padding: 12px; margin-bottom: 12px; max-height: 200px; overflow-y: auto; }
+        .table-info { background: #fef6ef; border-radius: 20px; padding: 12px; text-align: center; margin-bottom: 16px; border: 1px solid #e7cfb5; font-size: 1.8rem; font-weight: 800; color: #8B5A2B; }
+        .order-items { background: #faf6f0; border-radius: 20px; padding: 12px; margin-bottom: 12px; }
         .order-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #e2cfb5; font-size: 0.9rem; }
-        .item-name { font-weight: 600; }
-        .item-qty { color: #8B5A2B; font-weight: 600; }
         .order-total { text-align: right; font-weight: 800; font-size: 1.2rem; color: #8B5A2B; margin-top: 12px; padding-top: 12px; border-top: 2px solid #e7cfb5; }
-        .order-notes { background: #fff9f0; border-right: 4px solid #d4af37; padding: 10px; border-radius: 16px; margin: 12px 0; font-size: 0.85rem; color: #5c432a; }
-        .order-footer { padding: 16px; background: #fefaf5; display: flex; gap: 12px; border-top: 1px solid #f0e2d2; }
-        .action-btn { flex: 1; padding: 10px; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+        .order-notes { background: #fff9f0; border-right: 4px solid #d4af37; padding: 10px; border-radius: 16px; margin: 12px 0; font-size: 0.85rem; }
+        .order-footer { padding: 16px; display: flex; gap: 12px; border-top: 1px solid #f0e2d2; }
+        .action-btn { flex: 1; padding: 10px; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; }
         .btn-done { background: #8B5A2B; color: white; }
-        .btn-done:hover { background: #6f451f; transform: scale(0.98); }
-        .btn-print { background: white; border: 1px solid #d4af37; color: #8B5A2B; }
-        .btn-print:hover { background: #d4af37; color: white; }
-        .btn-delete { background: #fff0f0; color: #b33; border: 1px solid #ffcdcd; }
-        .btn-delete:hover { background: #ffe0e0; }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 30px; font-size: 0.75rem; font-weight: 600; margin-top: 8px; }
-        .status-preparing { background: rgba(139,90,43,0.1); color: #8B5A2B; border: 1px solid #8B5A2B; }
-        .status-completed { background: rgba(212,175,55,0.1); color: #d4af37; border: 1px solid #d4af37; }
-        .empty-state { text-align: center; padding: 60px 20px; background: white; border-radius: 28px; border: 1px solid #e2cfb5; color: #7c6b5a; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 2000; display: none; justify-content: center; align-items: center; }
-        .modal-overlay.active { display: flex; }
-        .order-popup { background: white; border-radius: 40px; width: 90%; max-width: 400px; padding: 20px; border: 2px solid #d4af37; box-shadow: 0 30px 50px rgba(0,0,0,0.2); animation: popIn 0.3s ease; }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .popup-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f0e2d2; padding-bottom: 12px; }
-        .popup-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #8B5A2B; }
-        .popup-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #8b6948; }
-        .popup-table { background: #fef6ef; padding: 16px; border-radius: 28px; text-align: center; margin-bottom: 20px; }
-        .popup-table-number { font-size: 2.5rem; font-weight: 800; color: #8B5A2B; }
-        .popup-timer { background: #faf6f0; border-radius: 28px; padding: 12px; margin-bottom: 20px; }
-        .timer-display { font-size: 1.4rem; font-weight: 700; font-family: monospace; text-align: center; color: #8B5A2B; }
-        .progress-bar { height: 6px; background: #e2cfb5; border-radius: 10px; margin-top: 8px; overflow: hidden; }
-        .progress-fill { height: 100%; background: #d4af37; width: 0%; transition: width 1s linear; }
-        .receive-btn { width: 100%; background: #8B5A2B; color: white; border: none; border-radius: 40px; padding: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .receive-btn:hover { background: #6f451f; }
-        .notification { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #8B5A2B; color: white; padding: 12px 24px; border-radius: 50px; z-index: 3000; font-weight: 600; box-shadow: 0 6px 16px rgba(0,0,0,0.1); animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-        @media (max-width: 700px) { .header { flex-direction: column; gap: 12px; align-items: stretch; text-align: center; } .stats { justify-content: center; } .orders-grid { grid-template-columns: 1fr; } }
+        .btn-done:hover { background: #6f451f; }
+        .empty-state { text-align: center; padding: 60px 20px; background: white; border-radius: 28px; color: #7c6b5a; }
+        .notification { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #8B5A2B; color: white; padding: 12px 24px; border-radius: 50px; z-index: 3000; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<div class="gold-particles" id="goldParticles"></div>
 <div class="app-container">
     <div class="header">
         <div class="logo-area">
-            <div class="logo-circle"><img src="https://iili.io/qiHfvxj.jpg" alt="Mekasa Logo"></div>
+            <div class="logo-circle"><img src="https://iili.io/qiHfvxj.jpg" alt="Logo"></div>
             <div class="logo-text">Mekasa Kitchen</div>
         </div>
-        <div class="stats"><div class="stat-card"><div class="stat-number" id="preparingCount">0</div><div class="stat-label">Preparing</div></div><div class="stat-card"><div class="stat-number" id="completedCount">0</div><div class="stat-label">Completed</div></div></div>
-        <div class="controls"><button class="control-btn" id="soundToggle"><i class="fas fa-volume-up"></i></button><button class="control-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i></button></div>
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number" id="preparingCount">0</div><div class="stat-label">Preparing</div></div>
+            <div class="stat-card"><div class="stat-number" id="completedCount">0</div><div class="stat-label">Completed</div></div>
+        </div>
+        <div class="controls">
+            <button class="control-btn" id="forceBtn" title="Force Show Orders" style="background:#e8f5e9; border-color:#4caf50; color:#2e7d32; font-size:1.2rem; font-weight:bold;">⚡</button>
+            <button class="control-btn" id="soundToggle"><i class="fas fa-volume-up"></i></button>
+            <button class="control-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i></button>
+        </div>
     </div>
+    
     <div class="tabs">
-        <button class="tab-btn active" data-status="preparing"><i class="fas fa-fire"></i> Preparing<span class="badge" id="preparingBadge">0</span></button>
-        <button class="tab-btn" data-status="completed"><i class="fas fa-check-double"></i> Completed<span class="badge" id="completedBadge">0</span></button>
+        <button class="tab-btn active" data-status="preparing"><i class="fas fa-fire"></i> Preparing</button>
+        <button class="tab-btn" data-status="completed"><i class="fas fa-check-double"></i> Completed</button>
+        <button class="tab-btn" data-status="all" style="background:#fff3e0; color:#e65100;"><i class="fas fa-list"></i> All Orders</button>
     </div>
+    
     <div id="ordersContainer" class="orders-grid"></div>
 </div>
 
-<div id="popupOverlay" class="modal-overlay">
-    <div class="order-popup">
-        <div class="popup-header"><span class="popup-title"><i class="fas fa-bell"></i> New Order!</span><button class="popup-close" id="closePopupBtn">&times;</button></div>
-        <div class="popup-table"><div class="popup-table-number" id="popupTableNumber">-</div><div id="popupTypeLabel">Order Type</div></div>
-        <div class="popup-timer"><div class="timer-display" id="timerDisplay">01:00</div><div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div></div>
-        <button class="receive-btn" id="receiveOrderBtn">✔️ Receive Order</button>
-    </div>
-</div>
-
-<audio id="notificationSound" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg"></audio>
-
 <script>
-    // ========== CONFIGURATION ==========
-    // ⚠️ ضع نفس رابط Google Apps Script هنا
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNTt4vBxSns2eeWfqhdngOIn10S1I6Hw7uV72x0A6f8LYzIsMMRmh_OuYsLPuoztmm/exec';
-    const REFRESH_INTERVAL = 5000; // فحص الطلبات كل 5 ثواني
+    // ⚠️ ضع الرابط الجديد هنا
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNTt4vBxSns2eeWfqhdngOIn10S1I6Hw7uV72x0A6f8LYzIsMMRmh_OuYsLPuoztmm/exec'; // استبدل النقاط برابطك كامل
 
     let orders = [];
     let currentStatus = 'preparing';
-    let popupActive = false;
-    let currentAlertOrder = null;
-    let timerInterval = null;
-    let soundEnabled = true;
 
     const ordersContainer = document.getElementById('ordersContainer');
-    const preparingCountSpan = document.getElementById('preparingCount');
-    const completedCountSpan = document.getElementById('completedCount');
-    const preparingBadge = document.getElementById('preparingBadge');
-    const completedBadge = document.getElementById('completedBadge');
-    const soundToggle = document.getElementById('soundToggle');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const popupOverlay = document.getElementById('popupOverlay');
-    const closePopupBtn = document.getElementById('closePopupBtn');
-    const receiveOrderBtn = document.getElementById('receiveOrderBtn');
-    const popupTableNumber = document.getElementById('popupTableNumber');
-    const popupTypeLabel = document.getElementById('popupTypeLabel');
-    const timerDisplay = document.getElementById('timerDisplay');
-    const progressFill = document.getElementById('progressFill');
-    const notificationSound = document.getElementById('notificationSound');
 
-    function showNotification(message, isError = false) {
-        const notif = document.createElement('div');
-        notif.className = 'notification';
-        notif.style.backgroundColor = isError ? '#b33' : '#8B5A2B';
-        notif.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${message}`;
-        document.body.appendChild(notif);
-        setTimeout(() => notif.remove(), 3000);
-    }
-
-    function formatTime(dateStr) {
-        try { const d = new Date(dateStr); return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }); } catch { return '-'; }
-    }
-
-    function calculateTotal(order) {
-        if (!order.items) return 0;
-        return order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    }
-
+    // دالة العرض القوية (لا تفشل)
     function renderOrders() {
-        const filtered = orders.filter(o => o.status === currentStatus);
+        let filtered = orders;
+        
+        // إذا اخترت "الكل" اعرض كل شيء، وإلا فلتر حسب الحالة
+        if (currentStatus !== 'all') {
+            filtered = orders.filter(o => o.status === currentStatus);
+        }
+
         if (filtered.length === 0) {
-            ordersContainer.innerHTML = `<div class="empty-state"><i class="fas fa-utensils" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>No orders</h3><p>New orders will appear here</p></div>`;
+            ordersContainer.innerHTML = '<div class="empty-state"><h3>No orders in this section</h3><p>Try clicking the ⚡ button or "All Orders" tab</p></div>';
             return;
         }
-        ordersContainer.innerHTML = filtered.map(order => {
-            const total = order.total || calculateTotal(order);
-            const timeStr = formatTime(order.timestamp);
-            const items = order.items || [];
-            // تعديل أيقونة الطاولة لتصبح توصيل إذا كانت الكلمة Delivery
-            const isDelivery = order.tableNumber === 'Delivery';
-            const typeIcon = isDelivery ? 'fa-motorcycle' : 'fa-chair';
-            const typeLabel = isDelivery ? 'Delivery' : `Table ${order.tableNumber}`;
-            
-            return `
-                <div class="order-card" data-order-id="${order.orderId}">
-                    <div class="order-header"><span class="order-id">#${order.orderId.slice(-6)}</span><span class="order-time">${timeStr}</span></div>
-                    <div class="order-body">
-                        <div class="table-info"><div class="table-number"><i class="fas ${typeIcon}"></i> ${typeLabel}</div></div>
-                        <div class="order-items">${items.map(item => `<div class="order-item"><span class="item-name">${item.name}</span><span><span class="item-qty">x${item.quantity}</span> <span class="item-price">${(item.price * item.quantity).toFixed(2)} JOD</span></span></div>`).join('')}<div class="order-total">Total: ${total.toFixed(2)} JOD</div></div>
-                        ${order.notes ? `<div class="order-notes"><i class="fas fa-sticky-note"></i> ${order.notes}</div>` : ''}
-                        <span class="status-badge ${order.status === 'preparing' ? 'status-preparing' : 'status-completed'}"><i class="fas ${order.status === 'preparing' ? 'fa-fire' : 'fa-check-circle'}"></i> ${order.status === 'preparing' ? 'Preparing' : 'Completed'}</span>
-                    </div>
-                    <div class="order-footer">
-                        ${order.status === 'preparing' ? `<button class="action-btn btn-done" onclick="markComplete('${order.orderId}')"><i class="fas fa-check"></i> Mark Ready</button>` : ''}
-                        <button class="action-btn btn-print" onclick="printOrder('${order.orderId}')"><i class="fas fa-print"></i> Print</button>
-                        ${order.status === 'completed' ? `<button class="action-btn btn-delete" onclick="deleteOrder('${order.orderId}')"><i class="fas fa-trash-alt"></i> Delete</button>` : ''}
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
 
-    async function fetchOrders() {
-        try {
-            const response = await fetch(`${SCRIPT_URL}?action=getOrders&_=${Date.now()}`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            if (data.success && data.orders) {
-                const newOrders = data.orders;
-                const oldIds = new Set(orders.map(o => o.orderId));
-                const fresh = newOrders.filter(o => !oldIds.has(o.orderId) && o.status === 'preparing');
-                
-                if (fresh.length > 0) {
-                    showNewOrderPopup(fresh[fresh.length - 1]);
-                    if (soundEnabled && notificationSound) { notificationSound.loop = true; notificationSound.volume = 0.4; notificationSound.play().catch(e => console.log); }
-                }
-                orders = newOrders;
-                updateCounts();
-                renderOrders();
-            } else throw new Error('Invalid response');
-        } catch (error) {
-            console.error('Fetch error:', error);
-            showNotification('Connection error', true);
-        }
+        let html = '';
+        filtered.forEach(function(order) {
+            let total = 0;
+            let itemsHtml = '';
+            let items = order.items;
+            
+            // شبكة أمان: إذا كانت المنتجات نصاً، حولها لكائن
+            if (typeof items === 'string') {
+                try { items = JSON.parse(items); } catch(e) { items = []; }
+            }
+            if (!Array.isArray(items)) items = [];
+
+            items.forEach(function(item) {
+                let itemTotal = (item.price || 0) * (item.quantity || 1);
+                total += itemTotal;
+                itemsHtml += '<div class="order-item"><span>' + (item.name || 'Item') + ' x' + (item.quantity || 1) + '</span><span>' + itemTotal.toFixed(2) + ' JOD</span></div>';
+            });
+
+            if (total === 0) total = order.total || 0;
+
+            let typeLabel = (order.tableNumber === 'Delivery') ? '🛵 Delivery' : '🪑 Table ' + (order.tableNumber || '-');
+            let statusBadge = (order.status === 'completed') ? '✅ Completed' : '🔥 Preparing';
+            
+            let notesHtml = order.notes ? '<div class="order-notes"><b>Notes:</b> ' + order.notes + '</div>' : '';
+            let actionBtn = (order.status === 'preparing') ? '<button class="action-btn btn-done" onclick="markComplete(\'' + order.orderId + '\')">✔ Mark Ready</button>' : '';
+
+            html += '<div class="order-card">' +
+                '<div class="order-header"><span class="order-id">#' + order.orderId.slice(-6) + '</span><span class="order-time">' + new Date(order.timestamp).toLocaleTimeString() + '</span></div>' +
+                '<div class="order-body">' +
+                    '<div class="table-info">' + typeLabel + '</div>' +
+                    '<div class="order-items">' + itemsHtml + '<div class="order-total">Total: ' + total.toFixed(2) + ' JOD</div></div>' +
+                    notesHtml +
+                    '<div style="margin-top:10px; font-weight:600; color:#8B5A2B;">' + statusBadge + '</div>' +
+                '</div>' +
+                '<div class="order-footer">' + actionBtn + '</div>' +
+            '</div>';
+        });
+
+        ordersContainer.innerHTML = html;
+        updateCounts();
     }
 
     function updateCounts() {
-        const preparing = orders.filter(o => o.status === 'preparing').length;
-        const completed = orders.filter(o => o.status === 'completed').length;
-        preparingCountSpan.innerText = preparing;
-        completedCountSpan.innerText = completed;
-        preparingBadge.innerText = preparing;
-        completedBadge.innerText = completed;
+        document.getElementById('preparingCount').innerText = orders.filter(o => o.status === 'preparing').length;
+        document.getElementById('completedCount').innerText = orders.filter(o => o.status === 'completed').length;
+    }
+
+    // ⚡ زر القوة السحرية (يخترق كل المشاكل ويجبر البيانات على الظهور)
+    document.getElementById('forceBtn').addEventListener('click', async function() {
+        alert('جاري فرض جلب البيانات...');
+        try {
+            let res = await fetch(SCRIPT_URL + '?action=getOrders&force=' + Date.now());
+            let text = await res.text();
+            let data = JSON.parse(text);
+            
+            if (data.success) {
+                orders = data.orders; // حقن البيانات بالقوة
+                currentStatus = 'all'; // تبديل التبويب للكل لضمان رؤيتها
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-status="all"]').classList.add('active');
+                renderOrders(); // فرض الرسم
+                
+                if (orders.length > 0) {
+                    alert('نجاح! تم إيجاد ' + orders.length + ' طلب وفرضها على الشاشة. إذا رأيتها الآن، فالمشكلة كانت في التحديث التلقائي.');
+                } else {
+                    alert('الاتصال ناجح، لكن الإكسل فارغ تماماً! تأكد أنك أتممت طلباً من المتجر.');
+                }
+            } else {
+                alert('خطأ في البيانات: ' + text);
+            }
+        } catch(e) {
+            alert('فشل الاتصال: ' + e.message);
+        }
+    });
+
+    // التحديث العادي
+    async function fetchOrders() {
+        try {
+            let res = await fetch(SCRIPT_URL + '?action=getOrders&t=' + Date.now());
+            let data = await res.json();
+            if (data.success) {
+                orders = data.orders;
+                renderOrders();
+            }
+        } catch(e) { console.error(e); }
     }
 
     async function markComplete(orderId) {
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'updateOrderStatus');
-            formData.append('orderId', orderId);
-            formData.append('status', 'completed');
-            await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-            showNotification('Order marked as completed');
-            fetchOrders();
-        } catch (error) { showNotification('Failed to update status', true); }
+        let formData = new URLSearchParams();
+        formData.append('action', 'updateOrderStatus');
+        formData.append('orderId', orderId);
+        formData.append('status', 'completed');
+        await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        fetchOrders();
     }
 
-    async function deleteOrder(orderId) {
-        if (!confirm('Delete this order permanently?')) return;
-        try {
-            const formData = new URLSearchParams();
-            formData.append('action', 'deleteOrder');
-            formData.append('orderId', orderId);
-            await fetch(SCRIPT_URL, { method: 'POST', body: formData });
-            showNotification('Order deleted');
-            fetchOrders();
-        } catch (error) { showNotification('Failed to delete', true); }
-    }
+    // التبويبات
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentStatus this.dataset.status;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            renderOrders();
+        });
+    });
 
-    function printOrder(orderId) {
-        const order = orders.find(o => o.orderId === orderId);
-        if (!order) return;
-        const total = order.total || calculateTotal(order);
-        const isDelivery = order.tableNumber === 'Delivery';
-        const typeLabel = isDelivery ? 'Delivery Order' : `Table ${order.tableNumber}`;
-        
-        const win = window.open('', '_blank');
-        win.document.write(`
-            <!DOCTYPE html><html><head><title>Order ${order.orderId}</title>
-            <style>body { font-family: 'Inter', sans-serif; padding: 20px; max-width: 400px; margin: 0 auto; } h1 { color: #8B5A2B; font-family: 'Playfair Display', serif; } .header { text-align: center; border-bottom: 2px solid #d4af37; margin-bottom: 20px; } .items { margin: 20px 0; } .item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; } .total { font-weight: bold; font-size: 1.2rem; margin-top: 20px; text-align: right; } .footer { margin-top: 30px; text-align: center; color: #888; }</style>
-            </head><body>
-            <div class="header"><h1>Mekasa</h1><p>Order #${order.orderId.slice(-6)}</p><p>${typeLabel}</p></div>
-            <div class="items">${order.items.map(item => `<div class="item"><span>${item.name} x${item.quantity}</span><span>${(item.price * item.quantity).toFixed(2)} JOD</span></div>`).join('')}</div>
-            <div class="total">Total: ${total.toFixed(2)} JOD</div>
-            ${order.notes ? `<div style="margin-top:15px; padding:10px; background:#fef6ef; border-radius:10px;"><strong>Notes:</strong> ${order.notes}</div>` : ''}
-            <div class="footer">Thank you for ordering at Mekasa</div>
-            </body></html>
-        `);
-        win.document.close();
-        win.print();
-    }
-
-    function showNewOrderPopup(order) {
-        if (popupActive) return;
-        popupActive = true;
-        currentAlertOrder = order;
-        const isDelivery = order.tableNumber === 'Delivery';
-        popupTableNumber.innerText = isDelivery ? 'Delivery' : `#${order.tableNumber}`;
-        popupTypeLabel.innerText = isDelivery ? 'New Delivery Order' : 'New Table Order';
-        popupOverlay.classList.add('active');
-        startTimer(60000);
-    }
-
-    function startTimer(durationMs) {
-        if (timerInterval) clearInterval(timerInterval);
-        let remaining = durationMs; const endTime = Date.now() + remaining;
-        const update = () => {
-            const diff = Math.max(0, endTime - Date.now());
-            const seconds = Math.floor(diff / 1000); const mins = Math.floor(seconds / 60); const secs = seconds % 60;
-            timerDisplay.innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
-            progressFill.style.width = `${((durationMs - diff) / durationMs) * 100}%`;
-            if (diff <= 0) { clearInterval(timerInterval); timerInterval = null; closePopup(); }
-        };
-        update(); timerInterval = setInterval(update, 1000);
-    }
-
-    function closePopup() {
-        if (timerInterval) clearInterval(timerInterval);
-        popupOverlay.classList.remove('active'); popupActive = false; currentAlertOrder = null;
-        if (notificationSound) { notificationSound.pause(); notificationSound.currentTime = 0; notificationSound.loop = false; }
-    }
-
-    function receiveOrder() { closePopup(); showNotification('Order received, preparing...'); }
-
-    function toggleSound() {
-        soundEnabled = !soundEnabled;
-        soundToggle.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>';
-        if (!soundEnabled && notificationSound) { notificationSound.pause(); notificationSound.currentTime = 0; notificationSound.loop = false; }
-        showNotification(`Sound ${soundEnabled ? 'ON' : 'OFF'}`);
-    }
-
-    function switchTab(status) {
-        currentStatus = status;
-        document.querySelectorAll('.tab-btn').forEach(btn => { if (btn.dataset.status === status) btn.classList.add('active'); else btn.classList.remove('active'); });
-        renderOrders();
-    }
-
-    async function init() { await fetchOrders(); setInterval(fetchOrders, REFRESH_INTERVAL); }
-
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.status)));
-    refreshBtn.addEventListener('click', () => fetchOrders());
-    soundToggle.addEventListener('click', toggleSound);
-    closePopupBtn.addEventListener('click', closePopup);
-    receiveOrderBtn.addEventListener('click', receiveOrder);
-    window.markComplete = markComplete;
-    window.deleteOrder = deleteOrder;
-    window.printOrder = printOrder;
-
-    function createGoldParticles() {
-        const container = document.getElementById('goldParticles');
-        for (let i = 0; i < 90; i++) {
-            const p = document.createElement('div'); p.className = 'gold-particle';
-            p.style.width = (1.5 + Math.random() * 2.5) + 'px'; p.style.height = p.style.width;
-            p.style.left = Math.random() * 100 + '%'; p.style.animationDuration = (8 + Math.random() * 14) + 's';
-            p.style.animationDelay = Math.random() * -20 + 's'; p.style.opacity = 0.3 + Math.random() * 0.5;
-            container.appendChild(p);
-        }
-    }
-    createGoldParticles();
-    init();
+    // بدء التشغيل
+    fetchOrders();
+    setInterval(fetchOrders, 5000);
 </script>
 </body>
 </html>
